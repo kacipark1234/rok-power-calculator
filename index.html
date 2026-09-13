@@ -409,6 +409,133 @@
             color: #94a3b8;
         }
 
+        /* 精簡資訊元件 */
+        .compact-result {
+            padding: 13px 15px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border: 1px solid #bfdbfe;
+        }
+
+        .compact-result-main {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .compact-result-main .result-label {
+            margin: 0;
+        }
+
+        .compact-result-main .result-value {
+            font-size: 25px;
+            text-align: right;
+        }
+
+        .compact-meta {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .compact-meta-item {
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.72);
+        }
+
+        .compact-meta-label {
+            font-size: 11px;
+            color: #718096;
+            margin-bottom: 2px;
+        }
+
+        .compact-meta-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .upgrade-compact {
+            display: grid;
+            grid-template-columns: minmax(220px, .85fr) 1.5fr;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .upgrade-input-card,
+        .upgrade-stats-card {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        }
+
+        .upgrade-stats {
+            display: grid;
+            grid-template-columns: 1.4fr 1.4fr .8fr;
+            gap: 8px;
+        }
+
+        .mini-stat {
+            min-width: 0;
+            padding: 8px 9px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.76);
+        }
+
+        .mini-stat.gold {
+            background: linear-gradient(135deg, #fff7ed, #fef3c7);
+        }
+
+        .mini-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 3px;
+        }
+
+        .mini-value {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1f2937;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .power-summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+        }
+
+        .power-summary-card {
+            padding: 11px 12px;
+            border-radius: 12px;
+            border: 1px solid #dbeafe;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+        }
+
+        .power-summary-card.total {
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border-color: #bfdbfe;
+        }
+
+        .power-summary-card .mini-value {
+            font-size: 20px;
+            color: #4338ca;
+        }
+
+        .target-total-inline {
+            grid-column: 1 / -1;
+            padding: 12px 14px;
+            border-radius: 12px;
+            text-align: center;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border: 1px solid #bfdbfe;
+        }
+
         .upgrade-time-card.title .upgrade-time-value {
             color: #a16207;
         }
@@ -434,9 +561,7 @@
 
         @media (max-width: 768px) {
             body {
-                background:
-                    linear-gradient(180deg, #eef2ff 0%, #f8fafc 45%, #fdf4ff 100%);
-                padding-bottom: env(safe-area-inset-bottom);
+                background: #f3f6fb;
             }
 
             .container {
@@ -445,238 +570,257 @@
             }
 
             .app {
-                border-radius: 0;
-                border-left: 0;
-                border-right: 0;
                 min-height: 100vh;
+                border: 0;
+                border-radius: 0;
                 box-shadow: none;
             }
 
             .header {
-                padding: 14px 16px 11px;
+                padding: 10px 14px 8px;
             }
 
             .header h1 {
-                font-size: 20px;
+                font-size: 18px;
             }
 
             .header p {
-                margin-top: 3px;
-                font-size: 12px;
+                display: none;
             }
 
             .tabs {
                 position: sticky;
                 top: 0;
                 z-index: 20;
-                padding: 0 8px;
-                background: rgba(255,255,255,0.96);
-                backdrop-filter: blur(10px);
-                box-shadow: 0 2px 10px rgba(15,23,42,0.06);
+                padding: 0 6px;
+                background: rgba(255,255,255,.97);
             }
 
             .tab {
-                flex: 1;
-                min-height: 48px;
-                padding: 13px 6px 11px;
-                text-align: center;
-                font-size: 15px;
+                min-height: 40px;
+                padding: 9px 4px 7px;
+                font-size: 14px;
             }
 
             .page {
-                padding: 12px;
+                padding: 8px 9px 12px;
             }
 
             .section {
-                margin-bottom: 14px;
+                margin-bottom: 9px;
             }
 
             .section-title {
-                margin-bottom: 7px;
-                font-size: 15px;
+                margin-bottom: 5px;
+                font-size: 13px;
+                color: #475569;
             }
 
             .card {
-                padding: 12px;
-                border-radius: 12px;
+                padding: 9px 10px;
+                border-radius: 10px;
+                box-shadow: none;
             }
 
             input,
             select {
-                height: 48px;
+                height: 40px;
+                padding: 0 10px;
+                border-radius: 8px;
                 font-size: 16px;
-                border-radius: 10px;
             }
 
             button {
-                min-height: 46px;
-                font-size: 15px;
+                height: 40px;
+                min-height: 40px;
+                border-radius: 8px;
+                padding: 0 10px;
+                font-size: 13px;
+            }
+
+            .quick-input-row {
+                display: grid;
+                grid-template-columns: 1fr auto auto;
+                gap: 6px;
+                align-items: end;
+            }
+
+            .quick-input-row .field {
+                grid-column: auto;
+            }
+
+            .exact-toggle,
+            .clear-inline {
+                width: auto;
+                height: 40px;
+                padding: 0 10px;
+            }
+
+            .exact-panel {
+                margin-top: 8px;
+                padding-top: 8px;
+            }
+
+            .exact-hint {
+                display: none;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 6px;
+            }
+
+            .field {
+                gap: 3px;
+                min-width: 0;
+            }
+
+            .field label {
+                font-size: 11px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .compact-result {
+                padding: 9px 10px;
                 border-radius: 10px;
             }
 
-            /* 簡易輸入 + 兩顆按鈕 */
+            .compact-result-main {
+                gap: 6px;
+            }
+
+            .compact-result-main .result-label {
+                font-size: 11px;
+            }
+
+            .compact-result-main .result-value {
+                font-size: 18px;
+            }
+
+            .compact-meta {
+                gap: 5px;
+                margin-top: 6px;
+            }
+
+            .compact-meta-item {
+                padding: 6px 7px;
+                border-radius: 8px;
+            }
+
+            .compact-meta-label {
+                font-size: 10px;
+            }
+
+            .compact-meta-value {
+                font-size: 14px;
+            }
+
+            .upgrade-compact {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .upgrade-input-card,
+            .upgrade-stats-card {
+                padding: 8px 9px;
+                border-radius: 9px;
+            }
+
+            .upgrade-stats {
+                grid-template-columns: 1.35fr 1.35fr .8fr;
+                gap: 5px;
+            }
+
+            .mini-stat {
+                padding: 6px 7px;
+                border-radius: 8px;
+            }
+
+            .mini-label {
+                font-size: 10px;
+            }
+
+            .mini-value {
+                font-size: 13px;
+                line-height: 1.25;
+            }
+
+            .power-summary-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 5px;
+            }
+
+            .power-summary-card {
+                padding: 7px 8px;
+                border-radius: 9px;
+            }
+
+            .power-summary-card .mini-value {
+                font-size: 16px;
+            }
+
+            .target-summary {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 6px;
+                margin-top: 6px;
+            }
+
+            .target-card {
+                padding: 8px 9px;
+                border-radius: 9px;
+            }
+
+            .target-label {
+                font-size: 10px;
+                margin-bottom: 3px;
+            }
+
+            .target-value {
+                font-size: 15px;
+                line-height: 1.25;
+            }
+
+            .target-note {
+                margin-top: 2px;
+                font-size: 9px;
+            }
+
+            .target-total-inline {
+                padding: 9px 10px;
+                border-radius: 9px;
+            }
+
+            .total-power-label {
+                margin-bottom: 3px;
+                font-size: 11px;
+            }
+
+            .total-power-value {
+                font-size: 19px;
+                line-height: 1.25;
+            }
+        }
+
+        @media (max-width: 390px) {
             .quick-input-row {
-                display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                align-items: end;
             }
 
             .quick-input-row .field {
                 grid-column: 1 / -1;
             }
 
-            .exact-toggle,
-            .clear-inline {
-                width: 100%;
-                height: 46px;
-                padding: 0 10px;
-            }
-
-            /* 精確輸入在手機改成兩欄，減少頁面高度 */
             .grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 9px;
             }
 
-            .field {
-                gap: 5px;
-                min-width: 0;
-            }
-
-            .field label {
-                font-size: 13px;
-            }
-
-            .exact-panel {
-                margin-top: 12px;
-                padding-top: 12px;
-            }
-
-            .exact-hint {
-                margin-bottom: 10px;
-                font-size: 12px;
-            }
-
-            /* 加速結果：主結果全寬，其餘 2 欄 */
-            .result-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 9px;
-            }
-
-            .result-main {
-                grid-column: 1 / -1;
-            }
-
-            .result-card {
-                padding: 11px 12px;
-            }
-
-            .result-label {
-                margin-bottom: 5px;
-                font-size: 12px;
-            }
-
-            .result-value {
-                font-size: 18px;
-                line-height: 1.3;
-            }
-
-            .result-main .result-value {
-                font-size: 22px;
-            }
-
-            .upgrade-time-grid,
-            .direct-t5-grid {
-                grid-template-columns: 1fr;
-                gap: 9px;
-                margin-top: 10px;
-            }
-
-            .upgrade-time-card,
-            .direct-t5-card {
-                padding: 11px 12px;
-            }
-
-            .upgrade-time-value,
-            .direct-t5-value {
-                font-size: 18px;
-                line-height: 1.35;
-            }
-
-            .direct-t5-power {
-                font-size: 17px;
-            }
-
-            .total-power-card {
-                padding: 13px 14px;
-            }
-
-            .total-power-label {
-                margin-bottom: 5px;
-                font-size: 13px;
-            }
-
-            .total-power-value {
-                font-size: 24px;
-                line-height: 1.3;
-                word-break: break-word;
-            }
-
-            /* 戰力換算：手機維持兩欄結果，較省高度 */
-            .target-summary {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 9px;
-                margin-top: 9px;
-            }
-
-            .target-card {
-                padding: 11px 12px;
-                min-width: 0;
-            }
-
-            .target-label {
-                font-size: 12px;
-            }
-
-            .target-value {
-                font-size: 18px;
-                line-height: 1.35;
-                word-break: break-word;
-            }
-
-            .target-note {
-                font-size: 11px;
-            }
-        }
-
-        /* 很窄的手機再改成單欄，避免文字擠在一起 */
-        @media (max-width: 430px) {
-            .page {
-                padding: 10px;
-            }
-
-            .grid {
+            .upgrade-stats {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .target-summary {
-                grid-template-columns: 1fr;
-            }
-
-            .target-card {
-                padding: 12px;
-            }
-
-            .target-value {
-                font-size: 19px;
-            }
-
-            .result-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .result-card:last-child:nth-child(odd) {
+            .upgrade-stats .mini-stat:last-child {
                 grid-column: 1 / -1;
             }
         }
@@ -816,96 +960,88 @@
             <div class="section">
                 <div class="section-title">換算結果</div>
 
-                <div class="result-grid">
-
-                    <div class="result-card result-main">
+                <div class="compact-result">
+                    <div class="compact-result-main">
                         <div class="result-label">總加速時間</div>
-                        <div id="totalTimeResult" class="result-value">
-                            0 天 0 小時 0 分
+                        <div id="totalTimeResult" class="result-value">0 天 0 小時 0 分</div>
+                    </div>
+
+                    <div class="compact-meta">
+                        <div class="compact-meta-item">
+                            <div class="compact-meta-label">總天數</div>
+                            <div id="totalDaysResult" class="compact-meta-value">0</div>
+                        </div>
+
+                        <div class="compact-meta-item">
+                            <div class="compact-meta-label">總小時</div>
+                            <div id="totalHoursResult" class="compact-meta-value">0</div>
+                        </div>
+
+                        <div class="compact-meta-item">
+                            <div class="compact-meta-label">總分鐘</div>
+                            <div id="totalMinutesResult" class="compact-meta-value">0</div>
                         </div>
                     </div>
-
-                    <div class="result-card">
-                        <div class="result-label">換算總天數</div>
-                        <div id="totalDaysResult" class="result-value">0</div>
-                    </div>
-
-                    <div class="result-card">
-                        <div class="result-label">換算總小時</div>
-                        <div id="totalHoursResult" class="result-value">0</div>
-                    </div>
-
-                    <div class="result-card">
-                        <div class="result-label">換算總分鐘</div>
-                        <div id="totalMinutesResult" class="result-value">0</div>
-                    </div>
-
                 </div>
             </div>
 
             <div class="section">
                 <div class="section-title">兵種升級（使用頭銜）</div>
 
-                <div class="card">
-                    <div class="field">
-                        <label>T4 轉 T5</label>
-                        <input
-                            id="t4ToT5Count"
-                            type="number"
-                            min="0"
-                            step="1"
-                            placeholder="輸入數量"
-                            oninput="updateT4ToT5Time()"
-                        >
-                    </div>
-
-                    <div class="upgrade-time-grid">
-                        <div class="upgrade-time-card title">
-                            <div class="upgrade-time-label">所需時間</div>
-                            <div id="t4TitleTime" class="upgrade-time-value">
-                                0 天 0 小時 0 分 0 秒
-                            </div>
-
-                            <div class="upgrade-time-label" style="margin-top:10px;">剩餘時間</div>
-                            <div id="t4TitleRemain" class="upgrade-time-value">
-                                0 天 0 小時 0 分 0 秒
-                            </div>
-                        </div>
-
-                        <div class="upgrade-time-card">
-                            <div class="upgrade-time-label">戰力提升</div>
-                            <div id="t4PowerGain" class="upgrade-time-value">
-                                0
-                            </div>
+                <div class="upgrade-compact">
+                    <div class="upgrade-input-card">
+                        <div class="field">
+                            <label>T4 轉 T5 數量</label>
+                            <input
+                                id="t4ToT5Count"
+                                type="number"
+                                min="0"
+                                step="1"
+                                placeholder="輸入數量"
+                                oninput="updateT4ToT5Time()"
+                            >
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="section">
-                <div class="section-title">直升 T5（使用頭銜）</div>
+                    <div class="upgrade-stats-card">
+                        <div class="upgrade-stats">
+                            <div class="mini-stat gold">
+                                <div class="mini-label">所需時間</div>
+                                <div id="t4TitleTime" class="mini-value">0 天 0 小時 0 分 0 秒</div>
+                            </div>
 
-                <div class="card">
-                    <div class="direct-t5-grid">
+                            <div class="mini-stat">
+                                <div class="mini-label">剩餘時間</div>
+                                <div id="t4TitleRemain" class="mini-value">0 天 0 小時 0 分 0 秒</div>
+                            </div>
 
-                        <div class="direct-t5-card title">
-                            <div class="direct-t5-label">可產 T5 士兵</div>
-                            <div id="directT5TitleCount" class="direct-t5-value">0</div>
-
-                            <div class="direct-t5-sub">戰力提升</div>
-                            <div id="directT5TitlePower" class="direct-t5-power">0</div>
+                            <div class="mini-stat">
+                                <div class="mini-label">戰力提升</div>
+                                <div id="t4PowerGain" class="mini-value">0</div>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-title">總戰力</div>
+                <div class="section-title">剩餘加速用途</div>
 
-                <div class="total-power-card">
-                    <div class="total-power-label">總戰力提升</div>
-                    <div id="totalPowerGain" class="total-power-value">0</div>
+                <div class="power-summary-row">
+                    <div class="power-summary-card">
+                        <div class="mini-label">可直產 T5</div>
+                        <div id="directT5TitleCount" class="mini-value">0</div>
+                    </div>
+
+                    <div class="power-summary-card">
+                        <div class="mini-label">直產戰力</div>
+                        <div id="directT5TitlePower" class="mini-value">0</div>
+                    </div>
+
+                    <div class="power-summary-card total">
+                        <div class="mini-label">總戰力提升</div>
+                        <div id="totalPowerGain" class="mini-value">0</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -950,9 +1086,9 @@
                 <div class="target-summary">
 
                     <div class="target-card">
-                        <div class="target-label">T4 → T5 戰力提升</div>
+                        <div class="target-label">T4 → T5 戰力</div>
                         <div id="targetT4PowerGain" class="target-value">0</div>
-                        <div class="target-note">T4 數量 × 6</div>
+                        <div class="target-note">T4 × 6</div>
                     </div>
 
                     <div class="target-card">
@@ -961,40 +1097,33 @@
                     </div>
 
                     <div class="target-card highlight">
-                        <div class="target-label">需要直產 T5</div>
+                        <div class="target-label">需直產 T5</div>
                         <div id="targetDirectT5Count" class="target-value primary">0</div>
-                        <div class="target-note">每隻 T5 = 10 戰力</div>
+                        <div class="target-note">1 T5 = 10 戰力</div>
                     </div>
 
                     <div class="target-card">
-                        <div class="target-label">最終可達戰力</div>
+                        <div class="target-label">最終戰力</div>
                         <div id="targetFinalPower" class="target-value">0</div>
                     </div>
 
                     <div class="target-card">
-                        <div class="target-label">T4 → T5 所需加速</div>
+                        <div class="target-label">T4 → T5 加速</div>
                         <div id="targetT4Time" class="target-value">0 天 0 小時 0 分 0 秒</div>
                     </div>
 
                     <div class="target-card">
-                        <div class="target-label">直產 T5 所需加速</div>
+                        <div class="target-label">直產 T5 加速</div>
                         <div id="targetDirectT5Time" class="target-value">0 天 0 小時 0 分 0 秒</div>
                     </div>
 
-                </div>
-            </div>
-
-            <div class="section">
-                <div class="section-title">總需求</div>
-
-                <div class="total-power-card">
-                    <div class="total-power-label">總共需要加速</div>
-                    <div id="targetTotalTime" class="total-power-value">
-                        0 天 0 小時 0 分 0 秒
+                    <div class="target-total-inline">
+                        <div class="total-power-label">總共需要加速</div>
+                        <div id="targetTotalTime" class="total-power-value">0 天 0 小時 0 分 0 秒</div>
                     </div>
+
                 </div>
             </div>
-
         </div>
     </div>
 </div>
