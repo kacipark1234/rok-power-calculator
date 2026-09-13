@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>換算工具</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 34%),
+                radial-gradient(circle at top right, rgba(14, 165, 233, 0.16), transparent 32%),
+                linear-gradient(135deg, #eef2ff 0%, #f0f9ff 48%, #fdf4ff 100%);
+            font-family: "Microsoft JhengHei", Arial, sans-serif;
+            color: #1f2937;
+        }
+
+        .container {
+            width: min(1000px, calc(100% - 24px));
+            margin: 14px auto 24px;
+        }
+
+        .app {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 18px 50px rgba(79, 70, 229, 0.14);
+        }
+
+        .header {
+            padding: 18px 24px 14px;
+            color: #fff;
+            background: linear-gradient(135deg, #4f46e5, #2563eb 58%, #0ea5e9);
+            border-bottom: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 23px;
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: rgba(255,255,255,0.82);
+            font-size: 13px;
+        }
+
+        .tabs {
+            display: flex;
+            padding: 0 20px;
+            background: rgba(255,255,255,0.72);
+            border-bottom: 1px solid #dbe3f0;
+        }
+
+        .tab {
+            padding: 12px 22px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #718096;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.2s;
+        }
+
+        .tab:hover { color: #222; }
+
+        .tab.active {
+            color: #4f46e5;
+            border-bottom-color: #4f46e5;
+        }
+
+        .page {
+            display: none;
+            padding: 18px 24px 22px;
+        }
+
+        .page.active { display: block; }
+
+        .section { margin-bottom: 18px; }
+
+        .section:last-child { margin-bottom: 0; }
+
+        .section-title {
+            margin-bottom: 9px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .card {
+            padding: 16px 18px;
+            border: 1px solid #dbe4f0;
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,250,252,0.92));
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.05);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 11px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .field label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #fff;
+            font-size: 16px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #777;
+        }
+
+        .quick-input-row {
+            display: flex;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .quick-input-row .field {
+            flex: 1;
+        }
+
+        .input-with-unit {
+            position: relative;
+        }
+
+        .input-with-unit input {
+            padding-right: 46px;
+        }
+
+        .input-unit {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+            pointer-events: none;
+        }
+
+        .exact-toggle {
+            height: 44px;
+            white-space: nowrap;
+            padding: 0 18px;
+            border: 1px solid #c7d2fe;
+            background: #eef2ff;
+            color: #4338ca;
+            font-weight: 700;
+        }
+
+        .exact-toggle:hover {
+            background: #e0e7ff;
+        }
+
+        .clear-inline {
+            height: 44px;
+            white-space: nowrap;
+            padding: 0 18px;
+            border: 1px solid #fecaca;
+            background: #fff1f2;
+            color: #be123c;
+            font-weight: 700;
+        }
+
+        .clear-inline:hover {
+            background: #ffe4e6;
+        }
+
+        .exact-panel {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #ececec;
+        }
+
+        .exact-panel.open {
+            display: block;
+        }
+
+        .exact-hint {
+            margin: 0 0 14px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            height: 42px;
+            padding: 0 20px;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-secondary {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #2563eb);
+            color: #fff;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 11px;
+        }
+
+        .result-card {
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            border: 1px solid #dbeafe;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .result-label {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .result-value {
+            font-size: 22px;
+            font-weight: 800;
+            word-break: break-word;
+        }
+
+        .result-main {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border: 1px solid #bfdbfe;
+        }
+
+        .result-main .result-value {
+            font-size: 27px;
+        }
+
+        .upgrade-time-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 11px;
+            margin-top: 12px;
+        }
+
+        .upgrade-time-card {
+            padding: 13px 15px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            border: 1px solid #dbeafe;
+        }
+
+        .upgrade-time-card.title {
+            background: linear-gradient(135deg, #fff7ed, #fef3c7);
+            border-color: #fde68a;
+        }
+
+        .upgrade-time-label {
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .upgrade-time-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .time-warning {
+            color: #dc2626 !important;
+            font-weight: 900;
+        }
+
+        .direct-t5-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 11px;
+            margin-top: 12px;
+        }
+
+        .direct-t5-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            border: 1px solid #dbeafe;
+        }
+
+        .direct-t5-card.title {
+            background: linear-gradient(135deg, #fff7ed, #fef3c7);
+            border-color: #fde68a;
+        }
+
+        .direct-t5-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+
+        .direct-t5-value {
+            font-size: 21px;
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        .direct-t5-sub {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .direct-t5-power {
+            margin-top: 3px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #4f46e5;
+        }
+
+        .total-power-card {
+            padding: 16px 18px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border: 1px solid #bfdbfe;
+            text-align: center;
+        }
+
+        .total-power-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .total-power-value {
+            font-size: 30px;
+            font-weight: 900;
+            color: #4338ca;
+        }
+
+        .target-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 11px;
+            margin-top: 12px;
+        }
+
+        .target-card {
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8fafc, #eef2ff);
+            border: 1px solid #dbeafe;
+        }
+
+        .target-card.highlight {
+            background: linear-gradient(135deg, #eef2ff, #e0f2fe);
+            border-color: #bfdbfe;
+        }
+
+        .target-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .target-value {
+            font-size: 22px;
+            font-weight: 850;
+            color: #1f2937;
+        }
+
+        .target-value.primary {
+            color: #4338ca;
+        }
+
+        .target-note {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .upgrade-time-card.title .upgrade-time-value {
+            color: #a16207;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: calc(100% - 20px);
+                margin: 10px auto;
+            }
+
+            .header,
+            .page {
+                padding: 20px;
+            }
+
+            .tabs {
+                padding: 0 10px;
+            }
+
+            .tab {
+                flex: 1;
+                padding: 16px 8px;
+                text-align: center;
+            }
+
+            .grid,
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-input-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .exact-toggle {
+                width: 100%;
+            }
+
+            .result-main {
+                grid-column: auto;
+            }
+
+            .upgrade-time-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .direct-t5-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .target-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="app">
+
+        <div class="header">
+            <h1>兵力換算工具</h1>
+            <p>加速時間與戰力換算</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('speedPage', this)">
+                加速換算
+            </div>
+
+            <div class="tab" onclick="switchTab('powerPage', this)">
+                戰力換算
+            </div>
+        </div>
+
+        <div id="speedPage" class="page active">
+
+            <div class="section">
+                <div class="section-title">加速道具</div>
+
+                <div class="card">
+
+                    <div class="quick-input-row">
+                        <div class="field">
+                            <label>簡易輸入</label>
+
+                            <div class="input-with-unit">
+                                <input
+                                    id="simpleDays"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    placeholder="輸入總天數"
+                                    oninput="updateSpeedResult()"
+                                >
+                                <span class="input-unit">天</span>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            class="exact-toggle"
+                            onclick="toggleExactInput(this)"
+                        >
+                            精確輸入
+                        </button>
+
+                        <button
+                            type="button"
+                            class="clear-inline"
+                            onclick="clearSpeedInputs()"
+                        >
+                            清除
+                        </button>
+                    </div>
+
+                    <div id="exactInputPanel" class="exact-panel">
+
+                        <p class="exact-hint">
+                            輸入各類加速道具數量，結果會即時換算
+                        </p>
+
+                        <div class="grid">
+
+                            <div class="field">
+                                <label>1 分鐘加速</label>
+                                <input class="speed-item" data-minutes="1" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>5 分鐘加速</label>
+                                <input class="speed-item" data-minutes="5" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>10 分鐘加速</label>
+                                <input class="speed-item" data-minutes="10" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>15 分鐘加速</label>
+                                <input class="speed-item" data-minutes="15" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>30 分鐘加速</label>
+                                <input class="speed-item" data-minutes="30" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>1 小時加速</label>
+                                <input class="speed-item" data-minutes="60" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>3 小時加速</label>
+                                <input class="speed-item" data-minutes="180" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>8 小時加速</label>
+                                <input class="speed-item" data-minutes="480" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>15 小時加速</label>
+                                <input class="speed-item" data-minutes="900" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>24 小時加速</label>
+                                <input class="speed-item" data-minutes="1440" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                            <div class="field">
+                                <label>7 天加速</label>
+                                <input class="speed-item" data-minutes="10080" type="number" min="0" placeholder="數量" oninput="updateSpeedResult()">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">換算結果</div>
+
+                <div class="result-grid">
+
+                    <div class="result-card result-main">
+                        <div class="result-label">總加速時間</div>
+                        <div id="totalTimeResult" class="result-value">
+                            0 天 0 小時 0 分
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">換算總天數</div>
+                        <div id="totalDaysResult" class="result-value">0</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">換算總小時</div>
+                        <div id="totalHoursResult" class="result-value">0</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-label">換算總分鐘</div>
+                        <div id="totalMinutesResult" class="result-value">0</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">兵種升級（使用頭銜）</div>
+
+                <div class="card">
+                    <div class="field">
+                        <label>T4 轉 T5</label>
+                        <input
+                            id="t4ToT5Count"
+                            type="number"
+                            min="0"
+                            step="1"
+                            placeholder="輸入數量"
+                            oninput="updateT4ToT5Time()"
+                        >
+                    </div>
+
+                    <div class="upgrade-time-grid">
+                        <div class="upgrade-time-card title">
+                            <div class="upgrade-time-label">所需時間</div>
+                            <div id="t4TitleTime" class="upgrade-time-value">
+                                0 天 0 小時 0 分 0 秒
+                            </div>
+
+                            <div class="upgrade-time-label" style="margin-top:10px;">剩餘時間</div>
+                            <div id="t4TitleRemain" class="upgrade-time-value">
+                                0 天 0 小時 0 分 0 秒
+                            </div>
+                        </div>
+
+                        <div class="upgrade-time-card">
+                            <div class="upgrade-time-label">戰力提升</div>
+                            <div id="t4PowerGain" class="upgrade-time-value">
+                                0
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">直升 T5（使用頭銜）</div>
+
+                <div class="card">
+                    <div class="direct-t5-grid">
+
+                        <div class="direct-t5-card title">
+                            <div class="direct-t5-label">可產 T5 士兵</div>
+                            <div id="directT5TitleCount" class="direct-t5-value">0</div>
+
+                            <div class="direct-t5-sub">戰力提升</div>
+                            <div id="directT5TitlePower" class="direct-t5-power">0</div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">總戰力</div>
+
+                <div class="total-power-card">
+                    <div class="total-power-label">總戰力提升</div>
+                    <div id="totalPowerGain" class="total-power-value">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="powerPage" class="page">
+
+            <div class="section">
+                <div class="section-title">目標設定</div>
+
+                <div class="card">
+                    <div class="grid">
+                        <div class="field">
+                            <label>目標戰力</label>
+                            <input
+                                id="targetPower"
+                                type="number"
+                                min="0"
+                                step="1"
+                                placeholder="例如：30000000"
+                                oninput="updateTargetPowerCalc()"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label>T4 數量</label>
+                            <input
+                                id="targetT4Count"
+                                type="number"
+                                min="0"
+                                step="1"
+                                placeholder="輸入可升級的 T4 數量"
+                                oninput="updateTargetPowerCalc()"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">需求計算</div>
+
+                <div class="target-summary">
+
+                    <div class="target-card">
+                        <div class="target-label">T4 → T5 戰力提升</div>
+                        <div id="targetT4PowerGain" class="target-value">0</div>
+                        <div class="target-note">T4 數量 × 6</div>
+                    </div>
+
+                    <div class="target-card">
+                        <div class="target-label">尚缺戰力</div>
+                        <div id="targetRemainingPower" class="target-value">0</div>
+                    </div>
+
+                    <div class="target-card highlight">
+                        <div class="target-label">需要直產 T5</div>
+                        <div id="targetDirectT5Count" class="target-value primary">0</div>
+                        <div class="target-note">每隻 T5 = 10 戰力</div>
+                    </div>
+
+                    <div class="target-card">
+                        <div class="target-label">最終可達戰力</div>
+                        <div id="targetFinalPower" class="target-value">0</div>
+                    </div>
+
+                    <div class="target-card">
+                        <div class="target-label">T4 → T5 所需加速</div>
+                        <div id="targetT4Time" class="target-value">0 天 0 小時 0 分 0 秒</div>
+                    </div>
+
+                    <div class="target-card">
+                        <div class="target-label">直產 T5 所需加速</div>
+                        <div id="targetDirectT5Time" class="target-value">0 天 0 小時 0 分 0 秒</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">總需求</div>
+
+                <div class="total-power-card">
+                    <div class="total-power-label">總共需要加速</div>
+                    <div id="targetTotalTime" class="total-power-value">
+                        0 天 0 小時 0 分 0 秒
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(pageId, tabElement) {
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.classList.remove("active");
+        });
+
+        document.querySelectorAll(".page").forEach(page => {
+            page.classList.remove("active");
+        });
+
+        tabElement.classList.add("active");
+        document.getElementById(pageId).classList.add("active");
+    }
+
+    function toggleExactInput(button) {
+        const panel = document.getElementById("exactInputPanel");
+        const isOpen = panel.classList.toggle("open");
+
+        button.textContent = isOpen ? "收起精確輸入" : "精確輸入";
+    }
+
+    function getTotalSpeedMinutes() {
+        const simpleDays =
+            Math.max(0, Number(document.getElementById("simpleDays").value) || 0);
+
+        let totalMinutes = simpleDays * 1440;
+
+        document.querySelectorAll(".speed-item").forEach(input => {
+            const quantity = Math.max(0, Number(input.value) || 0);
+            const minutesPerItem = Number(input.dataset.minutes) || 0;
+
+            totalMinutes += quantity * minutesPerItem;
+        });
+
+        return totalMinutes;
+    }
+
+    function updateSpeedResult() {
+        const totalMinutes = getTotalSpeedMinutes();
+
+        const days = Math.floor(totalMinutes / 1440);
+        const remainingAfterDays = totalMinutes % 1440;
+        const hours = Math.floor(remainingAfterDays / 60);
+        const minutes = remainingAfterDays % 60;
+
+        const totalDays = totalMinutes / 1440;
+        const totalHours = totalMinutes / 60;
+
+        document.getElementById("totalTimeResult").textContent =
+            `${days.toLocaleString()} 天 ${hours} 小時 ${minutes} 分`;
+
+        document.getElementById("totalDaysResult").textContent =
+            formatDecimal(totalDays);
+
+        document.getElementById("totalHoursResult").textContent =
+            formatDecimal(totalHours);
+
+        document.getElementById("totalMinutesResult").textContent =
+            Math.floor(totalMinutes).toLocaleString();
+
+        if (document.getElementById("t4ToT5Count")) {
+            updateT4ToT5Time();
+        }
+    }
+
+    function formatDecimal(value) {
+        if (Number.isInteger(value)) {
+            return value.toLocaleString();
+        }
+
+        return value.toLocaleString(undefined, {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function clearSpeedInputs() {
+        document.getElementById("simpleDays").value = "";
+
+        document.querySelectorAll(".speed-item").forEach(input => {
+            input.value = "";
+        });
+
+        updateSpeedResult();
+    }
+
+    function formatSeconds(totalSeconds) {
+        totalSeconds = Math.max(0, totalSeconds);
+
+        const days = Math.floor(totalSeconds / 86400);
+        totalSeconds %= 86400;
+
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        return `${days.toLocaleString()} 天 ${hours} 小時 ${minutes} 分 ${seconds.toFixed(2)} 秒`;
+    }
+
+    function formatRemainingTime(seconds) {
+        if (seconds >= 0) {
+            return formatSeconds(seconds);
+        }
+
+        return "不足 " + formatSeconds(Math.abs(seconds));
+    }
+
+    function updateT4ToT5Time() {
+        const count = Math.max(
+            0,
+            Number(document.getElementById("t4ToT5Count").value) || 0
+        );
+
+        // T4 → T5：使用頭銜，每隻 22.8571875 秒
+        const titleSeconds = count * 22.8571875;
+
+        // 上方總加速時間
+        const totalSpeedSeconds = getTotalSpeedMinutes() * 60;
+
+        // 扣除 T4 → T5 後剩餘時間
+        const titleRemaining = totalSpeedSeconds - titleSeconds;
+
+        document.getElementById("t4TitleTime").textContent =
+            formatSeconds(titleSeconds);
+
+        const titleRemainEl = document.getElementById("t4TitleRemain");
+        titleRemainEl.textContent = formatRemainingTime(titleRemaining);
+        titleRemainEl.classList.toggle("time-warning", titleRemaining < 0);
+
+        // T4 → T5：每隻提升 6 戰力
+        document.getElementById("t4PowerGain").textContent =
+            Math.floor(count * 6).toLocaleString();
+
+        // 剩餘時間拿去直升 T5
+        // 使用頭銜：每隻 T5 需要 68.571875 秒
+        const usableTitleSeconds = Math.max(0, titleRemaining);
+        const directTitleCount =
+            Math.floor(usableTitleSeconds / 68.571875);
+
+        document.getElementById("directT5TitleCount").textContent =
+            directTitleCount.toLocaleString();
+
+        // 1 個 T5 = 10 戰力
+        const t4UpgradePower = Math.floor(count * 6);
+        const directT5Power = directTitleCount * 10;
+
+        document.getElementById("directT5TitlePower").textContent =
+            directT5Power.toLocaleString();
+
+        document.getElementById("totalPowerGain").textContent =
+            (t4UpgradePower + directT5Power).toLocaleString();
+    }
+
+    function updateTargetPowerCalc() {
+        const targetPower = Math.max(
+            0,
+            Math.floor(Number(document.getElementById("targetPower").value) || 0)
+        );
+
+        const t4Count = Math.max(
+            0,
+            Math.floor(Number(document.getElementById("targetT4Count").value) || 0)
+        );
+
+        // T4 → T5：每隻提升 6 戰力
+        const t4PowerGain = t4Count * 6;
+
+        // 剩餘需要補的戰力
+        const remainingPower = Math.max(0, targetPower - t4PowerGain);
+
+        // 直產 T5：每隻 10 戰力，無條件進位確保達標
+        const directT5Count = Math.ceil(remainingPower / 10);
+
+        // 使用頭銜後的訓練時間
+        const t4Seconds = t4Count * 22.8571875;
+        const directT5Seconds = directT5Count * 68.571875;
+        const totalSeconds = t4Seconds + directT5Seconds;
+
+        const finalPower = t4PowerGain + (directT5Count * 10);
+
+        document.getElementById("targetT4PowerGain").textContent =
+            t4PowerGain.toLocaleString();
+
+        document.getElementById("targetRemainingPower").textContent =
+            remainingPower.toLocaleString();
+
+        document.getElementById("targetDirectT5Count").textContent =
+            directT5Count.toLocaleString();
+
+        document.getElementById("targetFinalPower").textContent =
+            finalPower.toLocaleString();
+
+        document.getElementById("targetT4Time").textContent =
+            formatSeconds(t4Seconds);
+
+        document.getElementById("targetDirectT5Time").textContent =
+            formatSeconds(directT5Seconds);
+
+        document.getElementById("targetTotalTime").textContent =
+            formatSeconds(totalSeconds);
+    }
+
+    updateSpeedResult();
+    updateT4ToT5Time();
+    updateTargetPowerCalc();
+</script>
+
+</body>
+</html>
